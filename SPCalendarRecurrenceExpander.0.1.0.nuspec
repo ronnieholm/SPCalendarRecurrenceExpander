@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+    <metadata>
+        <id>SPCalendarRecurrenceExpander</id>
+        <version>0.1.0</version>
+        <title>SharePoint calendar recurrence expander</title>
+        <authors>Ronnie Holm</authors>
+        <owners>Ronnie Holm</owners>
+        <licenseUrl>https://github.com/ronnieholm/SPCalendarRecurrenceExpander/blob/master/LICENSE.txt</licenseUrl>
+        <projectUrl>https://github.com/ronnieholm/SPCalendarRecurrenceExpander</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>Turns SharePoint calendar recurrence events into a series of individual events, taking into account recurrence exceptions.</description>
+        <summary />
+        <copyright>Copyright (c) 2014 Ronnie Holm</copyright>
+        <tags>SharePoint SharePointApps SP2007 SP2010 SP2013 Office365 CSOM F#</tags>
+    </metadata>
+    <files>
+        <file src="Src\SPCalendarRecurrenceExpander\bin\Debug\SPCalendarRecurrenceExpander.dll" target="lib\net45\SPCalendarRecurrenceExpander.dll" />
+        <file src="Src\SPCalendarRecurrenceExpander\bin\Debug\SPCalendarRecurrenceExpander.pdb" target="lib\net45\SPCalendarRecurrenceExpander.pdb" />
+        <file src="Src\SPCalendarRecurrenceExpander\bin\Debug\SPCalendarRecurrenceExpander.XML" target="lib\net45\SPCalendarRecurrenceExpander.XML" />
+    </files>
+</package>
