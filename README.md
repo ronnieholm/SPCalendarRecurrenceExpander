@@ -12,8 +12,8 @@ SharePoint 2007, 2010, 2013, and Online comes with a calendar
 list type and associated functionality for creating either single
 events or recurrence events following a large number of patterns.
 
-Although the feature is buggy, with on-premise SharePoint,
-recurrence events may be programatically retrieved and expanded
+Although the feature is buggy, with on-prem SharePoint,
+recurrence events may be programmatically retrieved and expanded
 through a CAML query. With SharePoint Online, on the other hand,
 recurrence expansion through CAML query is unsupported. Short of
 expanding events yourself, you could reverse engineer the
@@ -42,7 +42,7 @@ from NuGet.
 The NuGet package contains a .NET 4.5 assembly as that's required
 for use with SharePoint Online. For support of other .NET runtime
 versions (for older SharePoint versions), currently you'd have to
-build the the library yourself.
+build the library yourself.
 
 SPCalendarRecurrenceExpander is written in F# which means your
 project will have to reference fsharp.core.dll to consume the
@@ -107,8 +107,8 @@ list of expanded appointments:
         }
     }
 
-Which platforms are supported
------------------------------
+Supported platforms
+-------------------
 
 SPCalendarRecurrenceExpander doesn't depend on any SharePoint
 assembly and thus no specific SharePoint version. Provided you
@@ -139,8 +139,8 @@ default when user doesn't explicitly specify an end time):
     Monthly (EveryQualifierOfKindOfDayEveryMthMonth (Third, WeekendDay, 2), NoExplicitEndRange)
 
 These syntax trees show two of about 50 recurrence patterns
-supported by SharePoint. Each of these patterns are fed to a
+supported by SharePoint. Each of these patterns is fed to a
 compiler which executes the language, effectively returning
 recurrence instances. Recurrence exceptions, such as deleted or
-modified instances, are special types of events that replaces
+modified instances, are special types of events that replace
 regular recurrence instances.
