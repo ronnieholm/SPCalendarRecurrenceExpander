@@ -77,7 +77,7 @@ list of expanded appointments:
         static void Main(string[] args) {
             var ctx = new ClientContext(web);
             var securePassword = new SecureString();
-            password__.ToList().ForEach(securePassword.AppendChar);
+            password.ToList().ForEach(securePassword.AppendChar);
             ctx.Credentials = new SharePointOnlineCredentials(username, securePassword);
             var calendar = ctx.Web.Lists.GetByTitle(calendarTitle);
             ctx.Load(ctx.Web.RegionalSettings.TimeZone);
