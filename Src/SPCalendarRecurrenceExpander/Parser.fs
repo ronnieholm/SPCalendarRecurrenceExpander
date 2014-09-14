@@ -200,7 +200,7 @@ type Parser() =
                         if dt.Hour = 0 && dt.Minute = 0 
                         then ExplicitEnd dt
                         else ExplicitEnd (d.["EndDate"] |> string |> DateTime.Parse)
-                    | _ -> failwith "Unable to parse EndRange"
+                    | _ -> failwith "Unable to parse end"
 
                 match rd with
                 | DailyEveryNthDay n -> Daily(EveryNthDay n, endDateTime)
