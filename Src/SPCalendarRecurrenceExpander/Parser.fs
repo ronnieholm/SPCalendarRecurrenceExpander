@@ -178,7 +178,7 @@ type Parser() =
         else None       
 
     let parseRecurrence(d: Dictionary<string, obj>) =
-        // todo: improve with pattern matching
+        // todo: improve with pattern matching on d directly
         if (d.["fRecurrence"] :?> bool) then 
             if (d.["EventType"] :?> int) = 3 then
                 DeletedRecurrenceInstance(d.["MasterSeriesItemID"] :?> int)
