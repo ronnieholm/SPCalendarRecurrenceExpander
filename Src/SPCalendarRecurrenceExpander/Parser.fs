@@ -178,6 +178,7 @@ type Parser() =
         else None       
 
     let parseRecurrence(d: Dictionary<string, obj>) =
+        // todo: improve with pattern matching
         if (d.["fRecurrence"] :?> bool) then 
             if (d.["EventType"] :?> int) = 3 then
                 DeletedRecurrenceInstance(d.["MasterSeriesItemID"] :?> int)
@@ -186,7 +187,7 @@ type Parser() =
             else
                 let rd = d.["RecurrenceData"] |> string
             
-                let endRange =
+                let endDateTime =
                     match rd with
                     | ImplicitEnd _ -> ImplicitEnd
                     | RepeatInstances n -> RepeatInstances n
@@ -202,13 +203,13 @@ type Parser() =
                     | _ -> failwith "Unable to parse EndRange"
 
                 match rd with
-                | DailyEveryNthDay n -> Daily(EveryNthDay n, endRange)
-                | DailyEveryWeekDay _ -> Daily(EveryWeekDay, endRange)
-                | WeeklyEveryNthWeekOnDays (n, days) -> Weekly(EveryNthWeekOnDays(n, days), endRange)
-                | MonthlyEveryNthDayOfEveryMthMonth (d, m) -> Monthly(MonthlyPattern.EveryNthDayOfEveryMthMonth(d, m), endRange)
-                | MonthlyEveryQualifierOfKindOfDayEveryMthMonth (q, k, n) -> Monthly(EveryQualifierOfKindOfDayEveryMthMonth(q, k, n), endRange)
-                | YearlyEveryNthDayOfEveryMMonth (n, m) -> Yearly(EveryNthDayOfEveryMMonth(n, m), endRange)
-                | YearlyEveryQualifierOfKindOfDayNMonth (q, k, n) -> Yearly(EveryQualifierOfKindOfDayMMonth(q, k, n), endRange)
+                | DailyEveryNthDay n -> Daily(EveryNthDay n, endDateTime)
+                | DailyEveryWeekDay _ -> Daily(EveryWeekDay, endDateTime)
+                | WeeklyEveryNthWeekOnDays (n, days) -> Weekly(EveryNthWeekOnDays(n, days), endDateTime)
+                | MonthlyEveryNthDayOfEveryMthMonth (d, m) -> Monthly(MonthlyPattern.EveryNthDayOfEveryMthMonth(d, m), endDateTime)
+                | MonthlyEveryQualifierOfKindOfDayEveryMthMonth (q, k, n) -> Monthly(EveryQualifierOfKindOfDayEveryMthMonth(q, k, n), endDateTime)
+                | YearlyEveryNthDayOfEveryMMonth (n, m) -> Yearly(EveryNthDayOfEveryMMonth(n, m), endDateTime)
+                | YearlyEveryQualifierOfKindOfDayNMonth (q, k, n) -> Yearly(EveryQualifierOfKindOfDayMMonth(q, k, n), endDateTime)
                 | _ -> UnknownRecurrence
         else NoRecurrence
 
