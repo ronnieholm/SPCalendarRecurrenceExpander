@@ -161,9 +161,9 @@ type Parser() =
             Some (kindOfDayQualifier, kindOfDay, groupAsInt m "month")
         else None
 
-    let (|NoExplicitEndRange|_|) s =
+    let (|ImplicitEnd|_|) s =
         let re = Regex("<repeatForever>FALSE</repeatForever>")
-        if re.Match(s).Success then Some(0) else None
+        if re.Match(s).Success then Some() else None
 
     let (|RepeatInstances|_|) s =
         let re = Regex("<repeatInstances>(?<repeatInstances>(\d+))</repeatInstances>")
@@ -171,7 +171,7 @@ type Parser() =
         if m.Success then Some(groupAsInt m "repeatInstances")
         else None
 
-    let (|WindowEnd|_|) s =
+    let (|ExplicitEnd|_|) s =
         let re = Regex("<windowEnd>(?<windowEnd>(.*?))</windowEnd>")
         let m = re.Match(s)
         if m.Success then Some(groupAsDateTime m "windowEnd")
@@ -188,9 +188,9 @@ type Parser() =
             
                 let endRange =
                     match rd with
-                    | NoExplicitEndRange _ -> ImplicitEnd
+                    | ImplicitEnd _ -> ImplicitEnd
                     | RepeatInstances n -> RepeatInstances n
-                    | WindowEnd dt -> 
+                    | ExplicitEnd dt -> 
                         // WindowEnd contains both a date and a time component expressed
                         // in the same timezone as the start and end dates of the event.
                         // WindowEnd is equal to end date and time of the last recurrence
