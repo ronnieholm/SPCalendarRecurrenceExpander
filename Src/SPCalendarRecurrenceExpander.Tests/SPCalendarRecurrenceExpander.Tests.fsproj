@@ -54,6 +54,7 @@
     <None Include="packages.config" />
     <None Include="app.config" />
     <Compile Include="CompilerTests.fs" />
+    <Compile Include="CompilerPropertiesTests.fs" />
     <Compile Include="ParserTests.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

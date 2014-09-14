@@ -5,6 +5,8 @@ open System.Globalization
 open System.Collections.Generic
 open System.Text.RegularExpressions
 
+type Dow = DayOfWeek
+
 type KindOfDayQualifier =
     | First
     | Second
@@ -16,11 +18,10 @@ type KindOfDay =
     | Day
     | Weekday
     | WeekendDay
-    | DayOfWeek of DayOfWeek
+    | DayOfWeek of Dow
 
 type EndRange =
-    // SharePoint defines "no explicit end range" as 999 repeat instances
-    | NoExplicitEndRange
+    | NoExplicitEndRange (* SharePoint defaults to 999 instances *)
     | RepeatInstances of int
     | WindowEnd of DateTime
 
@@ -29,7 +30,7 @@ type DailyPattern =
     | EveryWeekDay
 
 type WeeklyPattern =
-    | EveryNthWeekOnDays of int * Set<DayOfWeek>
+    | EveryNthWeekOnDays of int * Set<Dow>
 
 type MonthlyPattern =
     | EveryNthDayOfEveryMthMonth of int * int
@@ -83,13 +84,13 @@ type Parser() =
         if m.Success then
             let g (k: string) = m.Groups.[k].Length > 0
             let days = List<DayOfWeek>()
-            if g "su" then days.Add(DayOfWeek.Sunday)
-            if g "mo" then days.Add(DayOfWeek.Monday)
-            if g "tu" then days.Add(DayOfWeek.Tuesday)
-            if g "we" then days.Add(DayOfWeek.Wednesday)
-            if g "th" then days.Add(DayOfWeek.Thursday)
-            if g "fr" then days.Add(DayOfWeek.Friday)
-            if g "sa" then days.Add(DayOfWeek.Saturday) 
+            if g "su" then days.Add(Dow.Sunday)
+            if g "mo" then days.Add(Dow.Monday)
+            if g "tu" then days.Add(Dow.Tuesday)
+            if g "we" then days.Add(Dow.Wednesday)
+            if g "th" then days.Add(Dow.Thursday)
+            if g "fr" then days.Add(Dow.Friday)
+            if g "sa" then days.Add(Dow.Saturday) 
             Some (groupAsInt m "weekFrequency", days |> Set.ofSeq)
         else None
 
@@ -99,8 +100,7 @@ type Parser() =
         if m.Success then Some (groupAsInt m "day", groupAsInt m "monthFrequency")
         else None
 
-    let (|KindOfDayQualifier|_|) s =
-        match s with
+    let (|KindOfDayQualifier|_|) = function
         | "first" -> Some First
         | "second" -> Some Second
         | "third" -> Some Third
@@ -108,18 +108,17 @@ type Parser() =
         | "last" -> Some Last
         | _ -> None
 
-    let (|KindOfDay|_|) s =
-        match s with
+    let (|KindOfDay|_|) = function
         | "day" -> Some Day
         | "weekday" -> Some Weekday
         | "weekend_day" -> Some WeekendDay
-        | "su" -> Some(DayOfWeek(DayOfWeek.Sunday))
-        | "mo" -> Some(DayOfWeek(DayOfWeek.Monday))
-        | "tu" -> Some(DayOfWeek(DayOfWeek.Thursday))
-        | "we" -> Some(DayOfWeek(DayOfWeek.Wednesday))
-        | "th" -> Some(DayOfWeek(DayOfWeek.Thursday))
-        | "fr" -> Some(DayOfWeek(DayOfWeek.Friday))
-        | "sa" -> Some(DayOfWeek(DayOfWeek.Saturday))
+        | "su" -> Some(DayOfWeek(Dow.Sunday))
+        | "mo" -> Some(DayOfWeek(Dow.Monday))
+        | "tu" -> Some(DayOfWeek(Dow.Thursday))
+        | "we" -> Some(DayOfWeek(Dow.Wednesday))
+        | "th" -> Some(DayOfWeek(Dow.Thursday))
+        | "fr" -> Some(DayOfWeek(Dow.Friday))
+        | "sa" -> Some(DayOfWeek(Dow.Saturday))
         | _ -> None
 
     let (|MonthlyEveryQualifierOfKindOfDayEveryMthMonth|_|) s =

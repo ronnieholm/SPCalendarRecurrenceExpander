@@ -154,8 +154,8 @@ type Compiler() =
             // date back by one.
             (a.Start.AddDays(-1.), nextFn)
             |> Seq.unfold (fun (dt, nextFn) ->
-                let next = if a.Start.AddDays(-1.) = dt then nextFn true dt else nextFn false dt
-                if next > a.End then None
+                let next: DateTime = if a.Start.AddDays(-1.) = dt then nextFn true dt else nextFn false dt
+                if next.AddSeconds(float a.Duration) > a.End then None
                 // we cannot increment next here because some generators
                 // require knowledge about previous recurrence instance
                 // date to be able to properly skip ahead.

@@ -1,27 +1,10 @@
 ﻿module SPCalendarRecurrenceExpander.Tests.Program
 
-// <package id="NUnit.Runners" version="2.6.3" />
-// add unquote package
-
-// add references to
-//   nunit.core
-//   nunit.core.interfaces
-//   nunit.framework
-
 open System
 open System.Reflection
 open NUnit.Core
 open NUnit.Framework
 open Swensen.Unquote
-
-// DOESN*T MATTER WHICH VERSION OF VS YOU USE OR IF YOU DON*T USE VS AT ALL
-// DOESN*T PRECLUDE YOU FROM USING THE STANDARD NUNIT TEST RUNNERS
-
-// alternatively, place tests in modules or types
-//let [<Test>] ``successful nunit assertion``() = Assert.IsTrue(true)    
-//let [<Test>] ``failing nunit assertion``() = Assert.IsTrue(false)    
-//let [<Test>] ``successful unquote test``() = test <@ 42 = 42 @>        
-//let [<Test>] ``failing unquote test``() = test <@ [1;2;3] = [4;5] @>
 
 let eventListener() =
     { new EventListener with        
