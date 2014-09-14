@@ -46,7 +46,7 @@ let dailyEveryNthDaysAppointment =
         return { 
             a with
                 Duration = int64 duration
-                Recurrence = Daily(EveryNthDay n, NoExplicitEndRange) } }
+                Recurrence = Daily(EveryNthDay n, ImplicitEnd) } }
 
 type SingleAppointmentGenerator = 
     static member Appointment() = 
@@ -114,9 +114,7 @@ let ``daily instances between start and end date and correctly spaced``() =
 
         // appointments start and end within window
         r |> Seq.head |> fun r -> Assert.GreaterOrEqual(a.Start, r.Start)
-        r |> Seq.last |> fun r -> 
-            let x = r.End <= a.End
-            Assert.LessOrEqual(r.End, a.End)
+        r |> Seq.last |> fun r -> Assert.LessOrEqual(r.End, a.End)
 
         // appointments start n days apart
         r

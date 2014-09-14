@@ -150,22 +150,22 @@ type Compiler() =
             let template = { Id = a.Id; Start = DateTime.MinValue; End = DateTime.MinValue }
 
             // given that start date may be a valid recurrence instance and generators
-            // start by incrementing time pointer by one day, we set initial start
-            // date back by one.
+            // start by incrementing current date by one day, we set initial start
+            // date back one day.
             (a.Start.AddDays(-1.), nextFn)
             |> Seq.unfold (fun (dt, nextFn) ->
                 let next: DateTime = if a.Start.AddDays(-1.) = dt then nextFn true dt else nextFn false dt
                 if next.AddSeconds(float a.Duration) > a.End then None
                 // we cannot increment next here because some generators
-                // require knowledge about previous recurrence instance
-                // date to be able to properly skip ahead.
+                // require knowledge of date of previous recurrence instance
+                // to properly skip ahead.
                 else Some (next, (next, nextFn)))
             |> Seq.map (fun dt -> { template with Start = dt; End = dt.AddSeconds(float a.Duration) })
 
         let recurrences =
             match a.Recurrence with
             | DeletedRecurrenceInstance _ -> Seq.empty
-            | RecurreceExceptionInstance _ -> Seq.empty
+            | ModifiedRecurreceInstance _ -> Seq.empty
             | NoRecurrence -> seq { yield { Id = a.Id; Start = a.Start; End = a.Start.AddSeconds(float a.Duration) } }
             | Daily(p, _) ->
                 match p with
@@ -259,7 +259,7 @@ type Compiler() =
                 |> Seq.filter(fun a -> 
                     let (mid, dt) =
                         match a.Recurrence with
-                        | RecurreceExceptionInstance(masterSeriesItemId, originalStartDateTime) -> (masterSeriesItemId, originalStartDateTime)
+                        | ModifiedRecurreceInstance(masterSeriesItemId, originalStartDateTime) -> (masterSeriesItemId, originalStartDateTime)
                         | _ -> failwith "Should never happen"                        
                     r.Start = dt && r.Id = mid)
                 |> Seq.toList

@@ -20,10 +20,10 @@ type KindOfDay =
     | WeekendDay
     | DayOfWeek of Dow
 
-type EndRange =
-    | NoExplicitEndRange (* SharePoint defaults to 999 instances *)
+type End =
+    | ImplicitEnd (* SP defaults to 999 instances *)
     | RepeatInstances of int
-    | WindowEnd of DateTime
+    | ExplicitEnd of DateTime
 
 type DailyPattern =
     | EveryNthDay of int
@@ -46,11 +46,11 @@ type Recurrence =
     | NoRecurrence
     | UnknownRecurrence
     | DeletedRecurrenceInstance of MasterSeriesItemId
-    | RecurreceExceptionInstance of MasterSeriesItemId * DateTime
-    | Daily of DailyPattern * EndRange
-    | Weekly of WeeklyPattern * EndRange
-    | Monthly of MonthlyPattern * EndRange
-    | Yearly of YearlyPattern * EndRange
+    | ModifiedRecurreceInstance of MasterSeriesItemId * DateTime
+    | Daily of DailyPattern * End
+    | Weekly of WeeklyPattern * End
+    | Monthly of MonthlyPattern * End
+    | Yearly of YearlyPattern * End
 
 type Appointment =
     { Id: int
@@ -182,13 +182,13 @@ type Parser() =
             if (d.["EventType"] :?> int) = 3 then
                 DeletedRecurrenceInstance(d.["MasterSeriesItemID"] :?> int)
             else if (d.["EventType"] :?> int) = 4 then
-                RecurreceExceptionInstance(d.["MasterSeriesItemID"] :?> int, d.["RecurrenceID"] |> string |> DateTime.Parse )
+                ModifiedRecurreceInstance(d.["MasterSeriesItemID"] :?> int, d.["RecurrenceID"] |> string |> DateTime.Parse )
             else
                 let rd = d.["RecurrenceData"] |> string
             
                 let endRange =
                     match rd with
-                    | NoExplicitEndRange _ -> NoExplicitEndRange
+                    | NoExplicitEndRange _ -> ImplicitEnd
                     | RepeatInstances n -> RepeatInstances n
                     | WindowEnd dt -> 
                         // WindowEnd contains both a date and a time component expressed
@@ -197,8 +197,8 @@ type Parser() =
                         // event except when end is at midnight (00:00am) in which case 
                         // WindowEnd is 24 hours ahead.
                         if dt.Hour = 0 && dt.Minute = 0 
-                        then WindowEnd dt
-                        else WindowEnd (d.["EndDate"] |> string |> DateTime.Parse)
+                        then ExplicitEnd dt
+                        else ExplicitEnd (d.["EndDate"] |> string |> DateTime.Parse)
                     | _ -> failwith "Unable to parse EndRange"
 
                 match rd with
