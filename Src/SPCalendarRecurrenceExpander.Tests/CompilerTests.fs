@@ -302,7 +302,7 @@ let ``monthly every last specific day of the month``() =
     let r = sut.Compile(a, [], [])
     test <@ compareMultiple r [(dt 2014 8 27); (dt 2014 11 26); (dt 2015 2 25)] (tm 11 30) (tm 13 30) @>
 
-//// yearly are mostly special cases on months with skipmonths = 12
+// yearly are mostly special cases on months with skipmonths = 12
 [<Test>]
 let ``yearly every n'th day of every m month``() =
     // when n is larger than days in month, select last day of month
@@ -329,9 +329,9 @@ let ``yearly every first weekday of specific month``() =
 
 [<Test>]
 let ``yearly every first weekend day of specific month``() =
-//    let a1 = { basic with Start = dt2 2015 2 1 11 30; End = dt2 2020 1 1 13 30; Recurrence = Yearly (EveryQualifierOfKindOfDayMMonth (First, WeekendDay, 2),ImplicitEnd) }
-//    let r1 = sut.Compile(a1, [], [])
-//    test <@ compareMultiple r1 [(dt 2015 2 1); (dt 2016 2 6); (dt 2017 2 4)] (tm 11 30) (tm 13 30) @>
+    let a1 = { basic with Start = dt2 2015 2 1 11 30; End = dt2 2020 1 1 13 30; Recurrence = Yearly (EveryQualifierOfKindOfDayMMonth (First, WeekendDay, 2),ImplicitEnd) }
+    let r1 = sut.Compile(a1, [], [])
+    test <@ compareMultiple r1 [(dt 2015 2 1); (dt 2016 2 6); (dt 2017 2 4)] (tm 11 30) (tm 13 30) @>
 
     // start date before first instance
     let a1 = { basic with Start = dt2 2014 9 25 11 30; End = dt2 2020 1 1 13 30; Recurrence = Yearly (EveryQualifierOfKindOfDayMMonth (First, WeekendDay, 10),ImplicitEnd) }

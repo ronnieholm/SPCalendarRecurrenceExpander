@@ -192,9 +192,9 @@ type Parser() =
                     | ImplicitEnd _ -> ImplicitEnd
                     | RepeatInstances n -> RepeatInstances n
                     | ExplicitEnd dt -> 
-                        // WindowEnd contains both a date and a time component expressed
+                        // ExplicitEnd contains both a date and a time component expressed
                         // in the same timezone as the start and end dates of the event.
-                        // WindowEnd is equal to end date and time of the last recurrence
+                        // ExplicitEnd is equal to end date and time of the last recurrence
                         // event except when end is at midnight (00:00am) in which case 
                         // ExplicitEnd is 24 hours ahead.
                         if dt.Hour = 0 && dt.Minute = 0 

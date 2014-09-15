@@ -121,5 +121,3 @@ let ``daily instances between start and end date and correctly spaced``() =
         |> Seq.pairwise 
         |> Seq.map (fun (a, b) -> (b.Start - a.Start).TotalSeconds |> string |> Int64.Parse)
         |> Seq.iter (fun a -> Assert.AreEqual(86400L * (int64 n), a))
-
-
