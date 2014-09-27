@@ -119,7 +119,7 @@ SPCalendarRecurrenceExpander doesn't depend on any SharePoint assembly
 and thus no specific SharePoint version. Provided you can access the
 raw calendar list items, the library will work. The library doesn't
 work with SharePoint's OData web service because it doesn't expose
-each item's FieldValue collection wherein the calendar metadata is
+each item's FieldValues collection wherein the calendar metadata is
 stored.
 
 How it works
