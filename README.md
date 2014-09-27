@@ -157,3 +157,8 @@ which "executes" the recurrence program, effectively returning
 recurrence instances. Recurrence exceptions, such as deleted or
 modified instances, are special types of events that replace regular
 recurrence instances.
+
+Please let me know if you find this package helpful.
+
+Regards,
+-- Ronnie Holm
