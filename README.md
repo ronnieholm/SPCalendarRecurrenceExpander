@@ -95,7 +95,7 @@ class Program {
         var expander = new CalendarRecurrenceExpander(
             tz.Information.Bias, 
             tz.Information.DaylightBias);
-        var recurrenceInstances = expander.Expand(collapsedAppointments); <-- Expand
+        var recurrenceInstances = expander.Expand(collapsedAppointments);
 
         Func<RecurrenceInstance, Appointment> toDomainObject = (ri => {
             var a = collapsedAppointments.First(i => int.Parse(i["ID"].ToString()) == ri.Id);
