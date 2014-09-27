@@ -131,13 +131,17 @@ output of the parser is a syntax tree describing the recurrence.
 For instance, here's the output for a weekly recurrence event,
 repeating every week on Sundays and Thursdays for ten instances:
 
-    Weekly (EveryNthWeekOnDays (1, set [DayOfWeek.Sunday; DayOfWeek.Thursday]), RepeatInstances 10)
+```fs
+Weekly (EveryNthWeekOnDays (1, set [DayOfWeek.Sunday; DayOfWeek.Thursday]), RepeatInstances 10)
+```
 
 Another example is monthly recurrendes every third weekend day of
 the month, every second month for 999 instances (SharePoint
 default when user doesn't explicitly specify an end time):
 
-    Monthly (EveryQualifierOfKindOfDayEveryMthMonth (Third, WeekendDay, 2), NoExplicitEndRange)
+```fs
+Monthly (EveryQualifierOfKindOfDayEveryMthMonth (Third, WeekendDay, 2), NoExplicitEndRange)
+```
 
 These syntax trees show two of about 50 recurrence patterns
 supported by SharePoint. Each of these patterns is fed to a
