@@ -161,4 +161,5 @@ recurrence instances.
 Please let me know if you find this package helpful.
 
 Regards,
+
 -- Ronnie Holm
