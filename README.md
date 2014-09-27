@@ -8,29 +8,28 @@ account recurrence exceptions.
 When to use it
 --------------
 
-SharePoint 2007, 2010, 2013, and Online comes with a calendar
-list type and associated functionality for creating either single
-events or recurrence events following a large number of patterns.
+SharePoint 2007, 2010, 2013, and Online comes with a calendar list
+type and web forms for creating either single events or recurrence
+events following a large number of patterns.
 
-Although the feature is buggy, with on-prem SharePoint,
-recurrence events may be programmatically retrieved and expanded
-through a CAML query. With SharePoint Online, on the other hand,
-recurrence expansion through CAML query is unsupported. Short of
-expanding events yourself, you could reverse engineer the
-internal and undocumented CalendarService.ashx used by the
-calendar views.
+For on-prem SharePoint, Microsoft added special CAML query support for
+programmatic expansion of recurrence events (although the feature is
+buggy). With SharePoint Online, on the other hand, recurrence
+expansion through CAML query is unsupported. You could reverse
+engineer the internal and undocumented CalendarService.ashx used by
+the calendar views.
 
-Alternatively, use SPCalendarRecurrenceExpander which implements
-event recurrence expansion by working with the underlying
-calendar list items directly.
+Or you could use SPCalendarRecurrenceExpander which implements event
+recurrence expansion by working with the underlying calendar list
+items directly, i.e., it depends only on standard list item access.
 
-Use cases involve creating custom views on top of calendars,
-either presenting events from a single calendar or aggregate
-events across any number of calendars. The built-in SharePoint
-calendar supports aggregating up to four calendars whereas
-SPCalendarRecurrenceExpander has no upper limit. You could also
-expose the expanded recurrence events via a web service for
-JavaScript consumption.
+Use cases for SPCalendarRecurrenceExpander involve creating custom
+views on top of calendars, either presenting events from a single
+calendar or aggregating events across any number of calendars. The
+built-in SharePoint calendar supports aggregating only up to four
+calendars whereas SPCalendarRecurrenceExpander has no upper
+limit. Another use case would be exposing the expanded recurrence
+events via a web service for JavaScript consumption.
 
 How to get it
 -------------
@@ -65,6 +64,7 @@ expander which returns a list of recurrence instances which are
 then merged with the original appointments to produce a final
 list of expanded appointments:
 
+    ```csharp
     class Appointment {
         public int Id { get; set; }
         public string Title { get; set; }
@@ -106,6 +106,7 @@ list of expanded appointments:
             var expandedAppointments = recurrenceInstances.Select(toDomainObject).ToList();
         }
     }
+    ```
 
 Supported platforms
 -------------------
