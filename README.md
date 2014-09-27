@@ -1,9 +1,9 @@
 SPCalendarRecurrenceExpander
 ============================
 
-SPCalendarRecurrenceExpander turns each SharePoint calendar
-recurrence event into a series of individual events, taking into
-account recurrence exceptions.
+SPCalendarRecurrenceExpander turns each SharePoint calendar recurrence
+event into a series of individual events, taking into account
+recurrence exceptions.
 
 When to use it
 --------------
@@ -75,33 +75,35 @@ class Appointment {
 
 class Program {
     static void Main(string[] args) {
-	var ctx = new ClientContext(web);
-	var securePassword = new SecureString();
-	password.ToList().ForEach(securePassword.AppendChar);
-	ctx.Credentials = new SharePointOnlineCredentials(username, securePassword);
-	var calendar = ctx.Web.Lists.GetByTitle(calendarTitle);
-	ctx.Load(ctx.Web.RegionalSettings.TimeZone);
-	var tz = ctx.Web.RegionalSettings.TimeZone;
-	ctx.ExecuteQuery();
+        var ctx = new ClientContext(web);
+        var securePassword = new SecureString();
+        password.ToList().ForEach(securePassword.AppendChar);
+        ctx.Credentials = new SharePointOnlineCredentials(username, securePassword);
+        var calendar = ctx.Web.Lists.GetByTitle(calendarTitle);
+        ctx.Load(ctx.Web.RegionalSettings.TimeZone);
+        var tz = ctx.Web.RegionalSettings.TimeZone;
+        ctx.ExecuteQuery();
 
-	var query = new CamlQuery();
-	var items = calendar.GetItems(query);
-	ctx.Load(items);
-	ctx.ExecuteQuery();
+        var query = new CamlQuery();
+        var items = calendar.GetItems(query);
+        ctx.Load(items);
+        ctx.ExecuteQuery();
 
-	var collapsedAppointments = items.ToList().Select(i => i.FieldValues).ToList();
-	var expander = new CalendarRecurrenceExpander(tz.Information.Bias, tz.Information.DaylightBias);
-	var recurrenceInstances = expander.Expand(collapsedAppointments);
+        var collapsedAppointments = items.ToList().Select(i => i.FieldValues).ToList();
+        var expander = new CalendarRecurrenceExpander(
+            tz.Information.Bias, 
+            tz.Information.DaylightBias);
+        var recurrenceInstances = expander.Expand(collapsedAppointments);
 
-	Func<RecurrenceInstance, Appointment> toDomainObject = (ri => {
-	    var a = collapsedAppointments.First(i => int.Parse(i["ID"].ToString()) == ri.Id);
-	    return new Appointment {
-		Id = ri.Id,
-		Title = (string) a["Title"],
-		Start = ri.Start,
-		End = ri.End
-	    };
-	});
+        Func<RecurrenceInstance, Appointment> toDomainObject = (ri => {
+            var a = collapsedAppointments.First(i => int.Parse(i["ID"].ToString()) == ri.Id);
+            return new Appointment {
+                Id = ri.Id,
+                Title = (string) a["Title"],
+                Start = ri.Start,
+                End = ri.End
+            };
+        });
 
 	var expandedAppointments = recurrenceInstances.Select(toDomainObject).ToList();
     }
