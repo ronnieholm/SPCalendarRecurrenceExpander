@@ -64,7 +64,7 @@ expander which returns a list of recurrence instances which are
 then merged with the original appointments to produce a final
 list of expanded appointments:
 
-    ```csharp
+    ```cs
     class Appointment {
         public int Id { get; set; }
         public string Title { get; set; }
