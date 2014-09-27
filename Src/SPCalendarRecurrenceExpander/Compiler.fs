@@ -38,6 +38,7 @@ module DateGenerators =
             | None -> 0
         d |> List.fold (fun acc key -> acc + frequencyBy key) 0
 
+    // todo: rename to genWindows(Month)Histograms 
     let genMonthHistograms (days: DayOfWeek list) year month =
         let daysInMonth = DateTime.DaysInMonth(year, month)
         [1..daysInMonth]
