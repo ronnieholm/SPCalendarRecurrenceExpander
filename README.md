@@ -160,6 +160,11 @@ recurrence instances.
 
 Please let me know if you find this package helpful.
 
+See also
+--------
+
+https://officespdev.uservoice.com/forums/224641-general/suggestions/5928804-provide-csom-and-rest-api-for-recurring-calendar-e
+
 Regards,
 
 -- Ronnie Holm
