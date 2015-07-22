@@ -114,7 +114,7 @@ type Parser() =
         | "weekend_day" -> Some WeekendDay
         | "su" -> Some(DayOfWeek(Dow.Sunday))
         | "mo" -> Some(DayOfWeek(Dow.Monday))
-        | "tu" -> Some(DayOfWeek(Dow.Thursday))
+        | "tu" -> Some(DayOfWeek(Dow.Tuesday))
         | "we" -> Some(DayOfWeek(Dow.Wednesday))
         | "th" -> Some(DayOfWeek(Dow.Thursday))
         | "fr" -> Some(DayOfWeek(Dow.Friday))
