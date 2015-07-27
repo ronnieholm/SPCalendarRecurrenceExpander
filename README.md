@@ -50,7 +50,7 @@ project will have to reference fsharp.core.dll to consume the
 library. The fsharp.core.dll assembly is installed by Visual
 Studio if you include F# language support or you can get the
 assembly by installing
-[this](https://www.nuget.org/packages/FSharp.Core.Microsoft.Signed/)
+[this](https://www.nuget.org/packages/FSharp.Core)
 NuGet package.
 
 How to use it
