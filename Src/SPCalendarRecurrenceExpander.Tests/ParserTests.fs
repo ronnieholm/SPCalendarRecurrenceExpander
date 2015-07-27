@@ -2,13 +2,13 @@
 
 open System
 open System.Collections.Generic
-open NUnit.Framework
+open Xunit
 open Swensen.Unquote
 open Holm.SPCalendarRecurrenceExpander
 
 let sut = Parser()
 
-[<Test>]
+[<Fact>]
 let ``parse with WindowEnd event ending at midnight``() =
     let a = Dictionary<string, obj>()
     a.Add("ID", 15)

@@ -1,8 +1,9 @@
 ﻿module CompilerPropertiesTests
 
 open System
-open NUnit.Framework
+open Xunit
 open FsCheck
+open FsCheck.Xunit
 open Swensen.Unquote
 open Holm.SPCalendarRecurrenceExpander
 
@@ -57,45 +58,24 @@ type DailyEveryNthDaysAppointment =
     static member Appointment() = 
         { new Arbitrary<Appointment>() with
             override x.Generator = dailyEveryNthDaysAppointment }
-
-type NUnitRunner () =
-    interface IRunner with
-        member __.OnStartFixture _ = ()
-        member __.OnArguments (ntest, args, every) = 
-            stdout.Write(every ntest args)
-        member __.OnShrink(args, everyShrink) = 
-            stdout.Write(everyShrink args)
-        member __.OnFinished (name, result) =
-            match result with
-            | TestResult.True _data ->
-                // TODO : Log the result data.
-                Runner.onFinishedToString name result
-                |> stdout.WriteLine
-            | TestResult.Exhausted _data ->
-                // TODO : Log the result data.
-                Runner.onFinishedToString name result
-                |> Assert.Inconclusive
-            | TestResult.False (_,_,_,_,_) ->
-                // TODO : Log more information about the test failure.
-                Runner.onFinishedToString name result
-                |> Assert.Fail
-  
+ 
 let fsCheck testable =
-    Check.One({Config.Verbose with MaxTest = 100; Runner = NUnitRunner()}, testable)
+    //Check.One({Config.Verbose with MaxTest = 100; Runner = NUnitRunner()}, testable)
+    ()
 
 let sut = Compiler()
 
-[<Test>]
+[<Fact>]
 let ``identity appointment on no recurrence``() =   
     Arb.register<SingleAppointmentGenerator>() |> ignore
 
     fsCheck <| fun (a: Appointment) ->
         let r = sut.Compile(a, [], [])
         let h = r |> Seq.head 
-        Assert.AreEqual(1, r |> Seq.length)
-        Assert.AreEqual({RecurrenceInstance.Id = a.Id; Start = a.Start; End = a.End}, h)
+        Assert.Equal(1, r |> Seq.length)
+        Assert.Equal({RecurrenceInstance.Id = a.Id; Start = a.Start; End = a.End}, h)
 
-[<Test>]
+[<Fact>]
 let ``daily instances between start and end date and correctly spaced``() =
     Arb.register<DailyEveryNthDaysAppointment>() |> ignore
 
@@ -110,14 +90,14 @@ let ``daily instances between start and end date and correctly spaced``() =
             | _ -> Int32.MinValue
 
         // id preservered across instances
-        Seq.iter (fun r -> Assert.AreEqual(a.Id, r.Id)) |> ignore
+        Seq.iter (fun r -> Assert.Equal(a.Id, r.Id)) |> ignore
 
         // appointments start and end within window
-        r |> Seq.head |> fun r -> Assert.GreaterOrEqual(a.Start, r.Start)
-        r |> Seq.last |> fun r -> Assert.LessOrEqual(r.End, a.End)
+        r |> Seq.head |> fun r -> Assert.True(a.Start >= r.Start)
+        r |> Seq.last |> fun r -> Assert.True(r.End < a.End)
 
         // appointments start n days apart
         r
         |> Seq.pairwise 
         |> Seq.map (fun (a, b) -> (b.Start - a.Start).TotalSeconds |> string |> Int64.Parse)
-        |> Seq.iter (fun a -> Assert.AreEqual(86400L * (int64 n), a))
+        |> Seq.iter (fun a -> Assert.Equal(86400L * (int64 n), a))
