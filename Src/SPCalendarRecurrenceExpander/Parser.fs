@@ -185,8 +185,14 @@ type Parser() =
             else if (d.["EventType"] :?> int) = 4 then
                 ModifiedRecurreceInstance(d.["MasterSeriesItemID"] :?> int, d.["RecurrenceID"] |> string |> DateTime.Parse )
             else
-                let rd = d.["RecurrenceData"] |> string
-            
+                // connecting a SharePoint calendar to Outlook, Outlook can not only 
+                // display SharePoint recurrence appointments, but also create those. 
+                // Outlook has its own version of SharePoint's dialogs for different
+                // recurrence types. The only difference between SharePoint and Outlook
+                // created appointments is that Outlook uses ' whereas SharePoint uses
+                // " within RecurrenceData.
+                let rd = (d.["RecurrenceData"] |> string).Replace("'","\"")
+
                 let endDateTime =
                     match rd with
                     | ImplicitEnd _ -> ImplicitEnd
