@@ -15,17 +15,16 @@ module DateGenerators =
     let allDays = weekDays @ weekendDays
 
     let rec genDateRange (first: DateTime) (last: DateTime) = seq {
-        if first.Day > last.Day then
+        if first > last then
             yield first
             yield! genDateRange (first.AddDays(-1.)) last    
-        elif first.Day < last.Day then
+        elif first < last then
             yield first
             yield! genDateRange (first.AddDays(1.)) last
-        elif first.Day = last.Day then
+        elif first = last then
             yield first }
 
     let computeDaysHistogram (first: DateTime) (last: DateTime) =
-        if first.Month <> last.Month then failwith "First month not equal to last month"
         genDateRange first last
         |> Seq.groupBy (fun dt -> dt.DayOfWeek)
         |> Seq.map (fun (dow, dates) -> (dow, dates |> Seq.length))
@@ -95,7 +94,11 @@ module DateGenerators =
 
     let nextWeekDay _ (dt: DateTime) =
         let next = dt.AddDays(1.) 
-        genDateRange next (DateTime.MaxValue) 
+        
+        // end date is two days after next date to ensure search space always 
+        // includes at least one week day, e.g., when next date is a Saturday, 
+        // we include the following Monday.
+        genDateRange next (next.AddDays(2.)) 
         |> Seq.find(fun d -> weekDays |> List.exists((=) d.DayOfWeek))
 
     let rec nextNthWeekOnDaysNext n daysOfWeek first (dt: DateTime) =
@@ -163,7 +166,7 @@ type Compiler() =
                 else Some (next, (next, nextFn)))
             |> Seq.map (fun dt -> { template with Start = dt; End = dt.AddSeconds(float a.Duration) })
 
-        let recurrences =
+        let recurrences =            
             match a.Recurrence with
             | DeletedRecurrenceInstance _ -> Seq.empty
             | ModifiedRecurreceInstance _ -> Seq.empty
