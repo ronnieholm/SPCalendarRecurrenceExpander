@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "SPCalendarRecurrenceExpander", "Src\SPCalendarRecurrenceExpander\SPCalendarRecurrenceExpander.fsproj", "{836EDEAB-C100-48C5-93C6-2269817DE43B}"
 EndProject
@@ -19,6 +19,13 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SPCalendarRecurrenceExpander.CSharpExample", "Examples\SPCalendarRecurrenceExpander.CSharpExample\SPCalendarRecurrenceExpander.CSharpExample.csproj", "{D556DC3B-5C1E-404C-A95F-28DF831D4A42}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "SPCalendarRecurrenceExpander.FSharpExample", "Examples\SPCalendarRecurrenceExpander.FSharpExample\SPCalendarRecurrenceExpander.FSharpExample.fsproj", "{B50D954B-32B6-4905-BA11-C9B5C5616288}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{F43670E5-96CB-4CE2-B193-6DEC3273D47F}"
+	ProjectSection(SolutionItems) = preProject
+		CHANGELOG.md = CHANGELOG.md
+		LICENSE.txt = LICENSE.txt
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
