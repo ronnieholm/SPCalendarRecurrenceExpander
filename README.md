@@ -12,25 +12,24 @@ SharePoint 2007, 2010, 2013, and Online comes with a calendar list
 type and web forms for creating either single events or recurrence
 events following a large number of patterns.
 
-For on-prem SharePoint, Microsoft has added special CAML query support
-for programmatic expansion of recurrence events (though the feature is
-buggy). With SharePoint Online, however, recurrence expansion through
-CAML query has been disabled. Instead, the only out-of-the-box query
-expansion option is to reverse engineer the internal and undocumented
-CalendarService.ashx used by the calendar web part to render its
-views.
+On-prem SharePoint comes with CAML query support for programmatic
+expansion of recurrence events (though the feature is known to be
+buggy). With SharePoint Online, however, the expansion feature has
+been disabled. Instead, the only out-of-the-box expansion option is to
+reverse engineer the internal and undocumented CalendarService.ashx
+web service used by the calendar web part.
 
-SPCalendarRecurrenceExpander, on the other hand, implements event
-recurrence expansion by working with the underlying calendar list
-items directly, i.e., it depends only on standard list item access.
+SPCalendarRecurrenceExpander implements event recurrence expansion by
+working directly with the underlying calendar list items, i.e., it
+only requires access to the calendar app entries.
 
-Use cases for SPCalendarRecurrenceExpander involve creating custom
-views on top of calendars, either presenting events from a single
-calendar or aggregating events across any number of calendars. For
-instance, the built-in SharePoint calendar supports aggregating only
-up to four calendars whereas SPCalendarRecurrenceExpander has no upper
-limit. Another use case would be exposing the expanded recurrence
-events via a web service for JavaScript consumption.
+Use cases for SPCalendarRecurrenceExpander involve creating <a
+href="http://fullcalendar.io">custom views</a> on top of calendars,
+either presenting events from a single calendar or aggregating events
+across any number of calendars (the built-in SharePoint calendar
+supports aggregating up to four calendars). Another use case would be
+exposing the expanded recurrence events via a web service for
+JavaScript consumption.
 
 How to get it
 -------------
@@ -42,16 +41,14 @@ from NuGet:
     Install-Package SPCalendarRecurrenceExpander
 
 The NuGet package contains a .NET 4.5 assembly for use with SharePoint
-Online. For other .NET runtime versions (for older versions of
+Online. For other .NET runtime versions (supporting older versions of
 SharePoint), currently you'd have to build the library yourself.
 
-SPCalendarRecurrenceExpander is written in F# which means your
-project will have to reference fsharp.core.dll to consume the
-library. The fsharp.core.dll assembly is installed by Visual
-Studio if you include F# language support or you can get the
-assembly by installing
-[this](https://www.nuget.org/packages/FSharp.Core)
-NuGet package.
+SPCalendarRecurrenceExpander is written in F# which means your project
+will have to reference fsharp.core.dll to consume the library. If you
+included installed Visual Studio with F# support, fsharp.core.dll is
+already installed. Otherwise, you can get the assembly by installing
+[this](https://www.nuget.org/packages/FSharp.Core) NuGet package.
 
 How to use it
 -------------
@@ -62,9 +59,7 @@ folder contains complete C# and F# examples.
 
 Here's an abbreviated example that makes use of the SharePoint CSOM
 API to read all calendar list items. These are then fed into the
-expander which returns a list of recurrence instances to be merged
-with the original appointments to produce a final list of expanded
-appointments:
+expander which returns a list of recurrence instances:
 
 ```cs
 class Appointment {
@@ -129,11 +124,11 @@ When a user creates a recurrence event through the user interface,
 SharePoint
 [transforms](http://aspnetguru.wordpress.com/2007/06/01/understanding-the-sharepoint-calendar-and-how-to-export-it-to-ical-format)
 the event into a set of key/value properties and uses an XML-based
-domain specific language for describing recurrences.
+domain specific language to describe recurrences.
 
-SPCalendarRecurrenceExpander consists of a parser for these
-key/value properties and the recurrence description language. The
-output of the parser is a syntax tree describing the recurrence.
+SPCalendarRecurrenceExpander consists of a parser for these key/value
+properties and the recurrence description language. The output of the
+parser is a syntax tree representing the recurrence.
 
 For instance, here's the output for a weekly recurrence event,
 repeating every week on Sundays and Thursdays for ten instances:
@@ -155,7 +150,7 @@ These syntax trees show two of about 50 recurrence patterns supported
 by SharePoint. Each of these patterns is fed to a recurrence compiler
 which "executes" the recurrence program, effectively returning
 recurrence instances. Recurrence exceptions, such as deleted or
-modified instances, are special types of events that replace regular
+modified instances, are special types of events which replace regular
 recurrence instances.
 
 Please let me know if you find this package helpful.
