@@ -21,7 +21,20 @@ type CalendarRecurrenceExpander(tzBias: int, tzDaylightBias: int) =
             then a.["RecurrenceID"] <- toLocalTime (a.["RecurrenceID"])
             a
 
-    member __.Expand(appointments: ResizeArray<Dictionary<string, obj>>) =
+    /// Dumps the internal structure of appointments for debugging purposes.
+    member __.Dump(appointments: ResizeArray<Dictionary<string, obj>>) =
+            let keys = 
+                ["ID"; "EventDate"; "EndDate"; "Duration"; "fRecurrence"; "EventType"; 
+                 "MasterSeriesItemID"; "RecurrenceID"; "RecurrenceData"; "fAllDayEvent"]
+            appointments 
+            |> Seq.map (fun a -> 
+                keys |> List.map (fun k -> 
+                    (k, if a.ContainsKey(k) then Some (a.[k]) else None)))
+            |> Seq.toList
+            |> sprintf "%A"                    
+
+    /// Expands appointments into recurrence instances.
+    member __.Expand(appointments: ResizeArray<Dictionary<string, obj>>) =       
         let tzCorrectedAppointments =
             appointments
             |> Seq.toList
