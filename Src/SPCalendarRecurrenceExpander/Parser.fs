@@ -45,7 +45,7 @@ type MasterSeriesItemId = int
 type Recurrence =
     | NoRecurrence
     | UnknownRecurrence
-    | DeletedRecurrenceInstance of MasterSeriesItemId
+    | DeletedRecurrenceInstance of MasterSeriesItemId * DateTime
     | ModifiedRecurreceInstance of MasterSeriesItemId * DateTime
     | Daily of DailyPattern * End
     | Weekly of WeeklyPattern * End
@@ -181,9 +181,9 @@ type Parser() =
         // todo: improve with pattern matching on d directly
         if (d.["fRecurrence"] :?> bool) then 
             if (d.["EventType"] :?> int) = 3 then
-                DeletedRecurrenceInstance(d.["MasterSeriesItemID"] :?> int)
+                DeletedRecurrenceInstance(d.["MasterSeriesItemID"] :?> int, d.["RecurrenceID"] |> string |> DateTime.Parse)
             else if (d.["EventType"] :?> int) = 4 then
-                ModifiedRecurreceInstance(d.["MasterSeriesItemID"] :?> int, d.["RecurrenceID"] |> string |> DateTime.Parse )
+                ModifiedRecurreceInstance(d.["MasterSeriesItemID"] :?> int, d.["RecurrenceID"] |> string |> DateTime.Parse)
             else
                 // connecting a SharePoint calendar to Outlook, Outlook can not only 
                 // display SharePoint recurrence appointments, but also create those. 

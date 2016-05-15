@@ -444,7 +444,7 @@ let ``yearly every last specific day of specific month``() =
     test <@ compareMultiple r [(dt 2015 2 25); (dt 2016 2 24); (dt 2017 2 22)] (tm 11 30) (tm 13 30) @>
 
 [<Fact>]
-let ``daily recurrence with deleted instance``() = 
+let ``daily recurrence with deleted instance of same start and end date``() = 
     let recurrence =
         { Id = 5
           Start = dt2 2014 8 16 09 00
@@ -457,9 +457,33 @@ let ``daily recurrence with deleted instance``() =
           Start = dt2 2014 8 18 09 00
           End = dt2 2014 8 18 10 30
           Duration = 5400L
-          Recurrence = DeletedRecurrenceInstance(5) }      
+          Recurrence = DeletedRecurrenceInstance(5, dt2 2014 8 18 09 00) }
    
     let output = compile recurrence [deletedOccurance] []
+    test <@ output |> Seq.length = 4 @>
+    test <@ output |> Seq.filter (fun r -> r.Start.Day = 16) |> Seq.length = 1 @>
+    test <@ output |> Seq.filter (fun r -> r.Start.Day = 17) |> Seq.length = 1 @>
+    test <@ output |> Seq.filter (fun r -> r.Start.Day = 18) |> Seq.length = 0 @>
+    test <@ output |> Seq.filter (fun r -> r.Start.Day = 19) |> Seq.length = 1 @>
+    test <@ output |> Seq.filter (fun r -> r.Start.Day = 20) |> Seq.length = 1 @>
+
+[<Fact>]
+let ``daily recurrence with deleted instance of different start and end date``() =
+    let recurrence =
+        { Id = 5
+          Start = dt2 2014 8 16 09 00
+          End = dt2 2014 8 20 10 30
+          Duration = 5400L
+          Recurrence = Daily (EveryNthDay 1, RepeatInstances 5) }      
+    
+    let deletedOccuranceWithDifferentStartEnd = 
+        { Id = 6
+          Start = dt2 2014 8 18 09 01
+          End = dt2 2014 8 18 10 31
+          Duration = 5400L
+          Recurrence = DeletedRecurrenceInstance(5, dt2 2014 8 18 09 00) }      
+   
+    let output = compile recurrence [deletedOccuranceWithDifferentStartEnd] []
     test <@ output |> Seq.length = 4 @>
     test <@ output |> Seq.filter (fun r -> r.Start.Day = 16) |> Seq.length = 1 @>
     test <@ output |> Seq.filter (fun r -> r.Start.Day = 17) |> Seq.length = 1 @>

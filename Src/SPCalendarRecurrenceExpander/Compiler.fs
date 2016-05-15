@@ -251,21 +251,24 @@ type Compiler() =
             | UnknownRecurrence -> failwith "Unknown recurrence"
 
         recurrences
-        |> Seq.filter (fun r -> 
-            deletedRecurrences 
-            |> Seq.exists(fun a -> 
-                // todo: include check on id as well?
-                a.Start = r.Start && a.End = r.End)
-            |> not)
+        |> Seq.filter (fun r ->
+            if deletedRecurrences |> List.length = 0 then true
+            else        
+                deletedRecurrences 
+                |> Seq.exists(fun a -> 
+                    match a.Recurrence with
+                    | DeletedRecurrenceInstance(masterSeriesItemId, originalStartDateTime) -> 
+                        not(masterSeriesItemId = r.Id && r.Start = originalStartDateTime)
+                    | _ -> failwith "Should never happen"))
         |> Seq.map (fun r ->
             let re = 
                 recurreceExceptions 
                 |> Seq.filter(fun a -> 
-                    let (mid, dt) =
+                    let mid, dt =
                         match a.Recurrence with
                         | ModifiedRecurreceInstance(masterSeriesItemId, originalStartDateTime) -> (masterSeriesItemId, originalStartDateTime)
                         | _ -> failwith "Should never happen"                        
-                    r.Start = dt && r.Id = mid)
+                    r.Id = mid && r.Start = dt)
                 |> Seq.toList
 
             if re |> List.length = 1

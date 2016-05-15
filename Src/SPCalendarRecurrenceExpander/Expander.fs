@@ -23,15 +23,15 @@ type CalendarRecurrenceExpander(tzBias: int, tzDaylightBias: int) =
 
     /// Dumps the internal structure of appointments for debugging purposes.
     member __.Dump(appointments: ResizeArray<Dictionary<string, obj>>) =
-            let keys = 
-                ["ID"; "EventDate"; "EndDate"; "Duration"; "fRecurrence"; "EventType"; 
-                 "MasterSeriesItemID"; "RecurrenceID"; "RecurrenceData"; "fAllDayEvent"]
-            appointments 
-            |> Seq.map (fun a -> 
-                keys |> List.map (fun k -> 
-                    (k, if a.ContainsKey(k) then Some (a.[k]) else None)))
-            |> Seq.toList
-            |> sprintf "%A"                    
+        let keys = 
+            ["ID"; "EventDate"; "EndDate"; "Duration"; "fRecurrence"; "EventType"; 
+                "MasterSeriesItemID"; "RecurrenceID"; "RecurrenceData"; "fAllDayEvent"]
+        appointments 
+        |> Seq.map (fun a -> 
+            keys |> List.map (fun k -> 
+                (k, if a.ContainsKey(k) then Some (a.[k]) else None)))
+        |> Seq.toList
+        |> sprintf "%A"                    
 
     /// Expands appointments into recurrence instances.
     member __.Expand(appointments: ResizeArray<Dictionary<string, obj>>) =       
@@ -58,7 +58,7 @@ type CalendarRecurrenceExpander(tzBias: int, tzDaylightBias: int) =
             |> Seq.groupBy (fun a -> 
                 a.Recurrence 
                 |> function 
-                    | DeletedRecurrenceInstance masterSeriesItemId -> masterSeriesItemId
+                    | DeletedRecurrenceInstance(masterSeriesItemId, _) -> masterSeriesItemId
                     | _ -> failwith "Should never happen")
 
         let recurrenceExceptionInstancesByMasterSeriesItemId =
@@ -70,7 +70,7 @@ type CalendarRecurrenceExpander(tzBias: int, tzDaylightBias: int) =
             |> Seq.groupBy (fun a ->
                 a.Recurrence
                 |> function
-                    | ModifiedRecurreceInstance(masterSeriesItemId, dt) -> masterSeriesItemId
+                    | ModifiedRecurreceInstance(masterSeriesItemId, _) -> masterSeriesItemId
                     | _ -> failwith "Should never happen")
             |> Seq.toList
 
