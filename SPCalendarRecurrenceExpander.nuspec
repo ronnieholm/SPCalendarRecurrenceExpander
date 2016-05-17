@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>SPCalendarRecurrenceExpander</id>
-        <version>1.0.2</version>
+        <version>1.0.3</version>
         <title>SharePoint calendar recurrence expander</title>
         <authors>Ronnie Holm</authors>
         <owners>Ronnie Holm</owners>
@@ -11,8 +11,8 @@
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>Turns SharePoint calendar recurrence events into a series of individual events, taking into account recurrence exceptions.</description>
         <summary />
-        <copyright>Copyright (c) 2014-2015 Ronnie Holm</copyright>
-        <tags>SharePoint SharePointApps SP2007 SP2010 SP2013 Office365 CSOM F#</tags>
+        <copyright>Copyright (c) 2014-2016 Ronnie Holm</copyright>
+        <tags>SharePoint SharePointApps SP2007 SP2010 SP2013 SharePointOnline Office365 CSOM F#</tags>
     </metadata>
     <files>
         <file src="Src\SPCalendarRecurrenceExpander\bin\Debug\SPCalendarRecurrenceExpander.dll" target="lib\net45\SPCalendarRecurrenceExpander.dll" />
