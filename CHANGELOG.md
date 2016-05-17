@@ -8,7 +8,7 @@
 
 ### Bugs
 
-* [#7](https://github.com/ronnieholm/SPCalendarRecurrenceExpander/issues/7) - Adding exception by modifying time of appointment and then deleting it doesn't delete it from expanded appointments
+* [#7](https://github.com/ronnieholm/SPCalendarRecurrenceExpander/issues/7) - New time of appointment exception and deletion doesn't delete it from expanded appointments
 
 ## SPCalendarRecurrenceExpander 1.0.2 (2015-09-25)
 
