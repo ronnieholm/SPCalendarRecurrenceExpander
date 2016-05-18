@@ -252,14 +252,13 @@ type Compiler() =
 
         recurrences
         |> Seq.filter (fun r ->
-            if deletedRecurrences |> List.length = 0 then true
-            else        
-                deletedRecurrences 
-                |> Seq.exists(fun a -> 
-                    match a.Recurrence with
-                    | DeletedRecurrenceInstance(masterSeriesItemId, originalStartDateTime) -> 
-                        not(masterSeriesItemId = r.Id && r.Start = originalStartDateTime)
-                    | _ -> failwith "Should never happen"))
+            deletedRecurrences 
+            |> Seq.filter(fun a -> 
+                match a.Recurrence with
+                | DeletedRecurrenceInstance(masterSeriesItemId, originalStartDateTime) ->
+                    masterSeriesItemId = r.Id && r.Start = originalStartDateTime
+                | _ -> failwith "Should never happen")
+            |> Seq.length = 0)
         |> Seq.map (fun r ->
             let re = 
                 recurreceExceptions 

@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## SPCalendarRecurrenceExpander 1.0.4 (2016-05-18)
+
+### Bugs
+
+* [#8](https://github.com/ronnieholm/SPCalendarRecurrenceExpander/issues/8) - More than one delete exception causes all delete exceptions to re-appear in expansion
+
 ## SPCalendarRecurrenceExpander 1.0.3 (2016-05-17)
 
 ### Features
