@@ -146,7 +146,7 @@ type Compiler() =
     // we potentially need to pass in multiple appointments because each appointment 
     // isn't necessarily self-contained. A recurrence appointment might have deleted 
     // appointments which are appointments in themselves but with a special event type.
-    member __.Compile(a: Appointment, deletedRecurrences: Appointment list, recurreceExceptions: Appointment list): seq<RecurrenceInstance> =
+    member __.Compile(a: Appointment, deletedRecurrences: Appointment list, recurrenceExceptions: Appointment list): seq<RecurrenceInstance> =
         // SharePoint allows events with start = end => 0 duration
         if a.Start >= a.End then failwith "a.start and a.end"
 
@@ -169,7 +169,7 @@ type Compiler() =
         let recurrences =            
             match a.Recurrence with
             | DeletedRecurrenceInstance _ -> Seq.empty
-            | ModifiedRecurreceInstance _ -> Seq.empty
+            | ModifiedRecurrenceInstance _ -> Seq.empty
             | NoRecurrence -> seq { yield { Id = a.Id; Start = a.Start; End = a.Start.AddSeconds(float a.Duration) } }
             | Daily(p, _) ->
                 match p with
@@ -261,11 +261,11 @@ type Compiler() =
             |> Seq.length = 0)
         |> Seq.map (fun r ->
             let re = 
-                recurreceExceptions 
+                recurrenceExceptions 
                 |> Seq.filter(fun a -> 
                     let mid, dt =
                         match a.Recurrence with
-                        | ModifiedRecurreceInstance(masterSeriesItemId, originalStartDateTime) -> (masterSeriesItemId, originalStartDateTime)
+                        | ModifiedRecurrenceInstance(masterSeriesItemId, originalStartDateTime) -> (masterSeriesItemId, originalStartDateTime)
                         | _ -> failwith "Should never happen"                        
                     r.Id = mid && r.Start = dt)
                 |> Seq.toList

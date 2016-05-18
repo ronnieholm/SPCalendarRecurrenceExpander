@@ -16,10 +16,10 @@ let basic =
       Duration = 7200L
       Recurrence = UnknownRecurrence }
 
-let compile appointment deletedRecurrences recurreceExceptions = 
+let compile appointment deletedRecurrences recurrenceExceptions = 
     // include call to toList or we only verify the first couple of results when
     // the entire lazily generated sequenced may result in a runtime exception
-    Compiler().Compile(appointment, deletedRecurrences, recurreceExceptions) |> Seq.toList
+    Compiler().Compile(appointment, deletedRecurrences, recurrenceExceptions) |> Seq.toList
 
 let compareDate (i: RecurrenceInstance) (dt: DateTime) =
     i.Start.Year = dt.Year && i.Start.Month = dt.Month && i.Start.Day = dt.Day &&
@@ -536,7 +536,7 @@ let ``daily recurrence with recurrence exception``() =
           Start = dt2 2014 8 18 10 00
           End = dt2 2014 8 18 11 00
           Duration = 3600L
-          Recurrence = ModifiedRecurreceInstance(5, dt2 2014 8 18 09 00) }  
+          Recurrence = ModifiedRecurrenceInstance(5, dt2 2014 8 18 09 00) }  
           
     let output = compile recurrence [] [recurrenceException]
 

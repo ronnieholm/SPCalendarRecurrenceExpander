@@ -46,7 +46,7 @@ type CalendarRecurrenceExpander(tzBias: int, tzDaylightBias: int) =
             |> List.filter (fun a ->
                 match a.Recurrence with
                 | DeletedRecurrenceInstance _
-                | ModifiedRecurreceInstance(_, _) -> false
+                | ModifiedRecurrenceInstance(_, _) -> false
                 | _ -> true)
 
         let deletedInstancesByMasterSeriesItemId =
@@ -65,12 +65,12 @@ type CalendarRecurrenceExpander(tzBias: int, tzDaylightBias: int) =
             tzCorrectedAppointments
             |> List.filter (fun a ->
                 match a.Recurrence with
-                | ModifiedRecurreceInstance _ -> true                
+                | ModifiedRecurrenceInstance _ -> true                
                 | _ -> false)
             |> Seq.groupBy (fun a ->
                 a.Recurrence
                 |> function
-                    | ModifiedRecurreceInstance(masterSeriesItemId, _) -> masterSeriesItemId
+                    | ModifiedRecurrenceInstance(masterSeriesItemId, _) -> masterSeriesItemId
                     | _ -> failwith "Should never happen")
             |> Seq.toList
 
