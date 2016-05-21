@@ -536,7 +536,7 @@ let ``daily recurrence with recurrence exception``() =
           Start = dt2 2014 8 18 10 00
           End = dt2 2014 8 18 11 00
           Duration = 3600L
-          Recurrence = ModifiedRecurrenceInstance(5, dt2 2014 8 18 09 00) }  
+          Recurrence = ModifiedRecurrenceInstance(5, dt2 2014 8 18 09 00) }
           
     let output = compile recurrence [] [recurrenceException]
 

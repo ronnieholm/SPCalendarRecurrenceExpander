@@ -39,7 +39,7 @@ type CalendarRecurrenceExpander(tzBias: int, tzDaylightBias: int) =
             appointments
             |> Seq.toList
             |> List.map timeZoneCorrect
-            |> List.map (fun a -> Parser().Parse(a))
+            |> List.map (fun a -> Parser().Parse(a))        
 
         let regularAppointments =
             tzCorrectedAppointments
@@ -61,7 +61,7 @@ type CalendarRecurrenceExpander(tzBias: int, tzDaylightBias: int) =
                     | DeletedRecurrenceInstance(masterSeriesItemId, _) -> masterSeriesItemId
                     | _ -> failwith "Should never happen")
 
-        let recurrenceExceptionInstancesByMasterSeriesItemId =
+        let modifiedInstanceByMasterSeriesItemId =           
             tzCorrectedAppointments
             |> List.filter (fun a ->
                 match a.Recurrence with
@@ -82,12 +82,12 @@ type CalendarRecurrenceExpander(tzBias: int, tzDaylightBias: int) =
                     | Some (_, instances) -> instances |> Seq.toList
                     | None -> []
 
-                let recurrenceExceptionInstancesForAppointment =
-                    match recurrenceExceptionInstancesByMasterSeriesItemId |> Seq.tryFind (fun (id, _) -> id = a.Id) with
+                let modifiedInstancesForAppointment =
+                    match modifiedInstanceByMasterSeriesItemId |> Seq.tryFind (fun (id, _) -> id = a.Id) with
                     | Some (_, instances) -> instances |> Seq.toList
                     | None -> []
 
-                Compiler().Compile(a, deletedInstancesForAppointment, recurrenceExceptionInstancesForAppointment))
+                Compiler().Compile(a, deletedInstancesForAppointment, modifiedInstancesForAppointment))
             |> Seq.concat
 
         ResizeArray<_>(expandedAppointments)
