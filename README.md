@@ -158,8 +158,5 @@ Please let me know if you find this package helpful.
 See also
 --------
 
-https://officespdev.uservoice.com/forums/224641-general/suggestions/5928804-provide-csom-and-rest-api-for-recurring-calendar-e
-
-Regards,
-
--- Ronnie Holm
+[Internet Calendaring and Scheduling Core Object Specification](https://www.ietf.org/rfc/rfc2445.txt)
+[Data elements and interchange formats – Information interchange – Representation of dates and times](https://en.wikipedia.org/wiki/ISO_8601)
