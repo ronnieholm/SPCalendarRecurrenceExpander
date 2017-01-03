@@ -181,9 +181,9 @@ type Parser() =
         // todo: improve with pattern matching on d directly
         if (d.["fRecurrence"] :?> bool) then 
             if (d.["EventType"] :?> int) = 3 then
-                DeletedRecurrenceInstance(d.["MasterSeriesItemID"] :?> int, d.["RecurrenceID"] |> string |> DateTime.Parse)
+                DeletedRecurrenceInstance(d.["MasterSeriesItemID"] :?> int, d.["RecurrenceID"] :?> DateTime)
             else if (d.["EventType"] :?> int) = 4 then
-                ModifiedRecurrenceInstance(d.["MasterSeriesItemID"] :?> int, d.["RecurrenceID"] |> string |> DateTime.Parse)
+                ModifiedRecurrenceInstance(d.["MasterSeriesItemID"] :?> int, d.["RecurrenceID"] :?> DateTime)
             else
                 // connecting a SharePoint calendar to Outlook, Outlook can not only 
                 // display SharePoint recurrence appointments, but also create those. 
@@ -205,7 +205,7 @@ type Parser() =
                         // ExplicitEnd is 24 hours ahead.
                         if dt.Hour = 0 && dt.Minute = 0 
                         then ExplicitEnd dt
-                        else ExplicitEnd (d.["EndDate"] |> string |> DateTime.Parse)
+                        else ExplicitEnd (d.["EndDate"] :?> DateTime)
                     | _ -> failwith "Unable to parse end"
 
                 match rd with
@@ -220,9 +220,9 @@ type Parser() =
         else NoRecurrence
 
     let parse (a: Dictionary<string, obj>) =
-        { Id = a.["ID"] |> string |> Int32.Parse
-          Start = a.["EventDate"] |> string |> DateTime.Parse
-          End = a.["EndDate"] |> string |> DateTime.Parse
+        { Id = a.["ID"] :?> Int32
+          Start = a.["EventDate"] :?> DateTime
+          End = a.["EndDate"] :?> DateTime
           Duration = a.["Duration"] |> string |> Int64.Parse
           Recurrence = parseRecurrence a }
 

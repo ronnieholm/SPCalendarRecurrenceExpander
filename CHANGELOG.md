@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## SPCalendarRecurrenceExpander 1.0.5 (2017-01-03)
+
+### Bugs
+
+* [#12](https://github.com/ronnieholm/SPCalendarRecurrenceExpander/issues/12) - DateTime fields parsed as culture specific strings sometimes leading to format exception
+
 ## SPCalendarRecurrenceExpander 1.0.4 (2016-05-18)
 
 ### Bugs

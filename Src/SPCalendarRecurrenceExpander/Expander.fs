@@ -4,10 +4,8 @@ open System
 open System.Collections.Generic
 
 type CalendarRecurrenceExpander(tzBias: int, tzDaylightBias: int) =
-    let parseDateTime dt = dt |> string |> DateTime.Parse        
-
-    let toLocalTime dt =
-        (parseDateTime dt).AddMinutes(float(-tzBias - tzDaylightBias))
+    let toLocalTime (dt: obj) =
+        (dt :?> DateTime).AddMinutes(float(-tzBias - tzDaylightBias))
 
     let timeZoneCorrect (a: Dictionary<string, obj>) =
         // all day events already have local EventDate and EndDate which is
