@@ -10,7 +10,7 @@ type CalendarRecurrenceExpander(tzBias: int, tzDaylightBias: int) =
     let timeZoneCorrect (a: Dictionary<string, obj>) =
         // all day events already have local EventDate and EndDate which is
         // 12:00 AM and 11.59 PM, respectively
-        if (a.["fAllDayEvent"] |> string |> bool.Parse) 
+        if (a.["fAllDayEvent"] |> string |> bool.Parse)
         then a
         else
             a.["EventDate"] <- toLocalTime (a.["EventDate"])
@@ -23,7 +23,7 @@ type CalendarRecurrenceExpander(tzBias: int, tzDaylightBias: int) =
     member __.Dump(appointments: ResizeArray<Dictionary<string, obj>>) =
         let keys = 
             ["ID"; "EventDate"; "EndDate"; "Duration"; "fRecurrence"; "EventType"; 
-                "MasterSeriesItemID"; "RecurrenceID"; "RecurrenceData"; "fAllDayEvent"]
+             "MasterSeriesItemID"; "RecurrenceID"; "RecurrenceData"; "fAllDayEvent"]
         appointments 
         |> Seq.map (fun a -> 
             keys |> List.map (fun k -> 

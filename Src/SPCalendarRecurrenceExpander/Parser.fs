@@ -6,6 +6,7 @@ open System.Collections.Generic
 open System.Text.RegularExpressions
 
 type Dow = DayOfWeek
+type kv = Dictionary<string, obj>
 
 type KindOfDayQualifier =
     | First
@@ -177,24 +178,32 @@ type Parser() =
         if m.Success then Some(groupAsDateTime m "windowEnd")
         else None       
 
-    let parseRecurrence(d: Dictionary<string, obj>) =
-        // todo: improve with pattern matching on d directly
-        if (d.["fRecurrence"] :?> bool) then 
-            if (d.["EventType"] :?> int) = 3 then
-                DeletedRecurrenceInstance(d.["MasterSeriesItemID"] :?> int, d.["RecurrenceID"] :?> DateTime)
-            else if (d.["EventType"] :?> int) = 4 then
-                ModifiedRecurrenceInstance(d.["MasterSeriesItemID"] :?> int, d.["RecurrenceID"] :?> DateTime)
-            else
-                // connecting a SharePoint calendar to Outlook, Outlook can not only 
-                // display SharePoint recurrence appointments, but also create those. 
-                // Outlook has its own version of SharePoint's dialogs for different
-                // recurrence types. The only difference between SharePoint and Outlook
-                // created appointments is that Outlook uses ' whereas SharePoint uses
-                // " within RecurrenceData.
-                let rd = (d.["RecurrenceData"] |> string).Replace("'","\"")
+    let recurrence (d: kv) = d.["fRecurrence"] :?> bool
+    let eventType (d: kv) = d.["EventType"] :?> int
+    let masterSeriesItemId (d: kv) = d.["MasterSeriesItemID"] :?> int
+    let recurrenceId (d: kv) = d.["RecurrenceID"] :?> DateTime
+    let endDate (d: kv) = d.["EndDate"] :?> DateTime
+    let id (d: kv) = d.["ID"] :?> Int32
+    let eventDate (d: kv) = d.["EventDate"] :?> DateTime
+    let duration (d: kv) = d.["Duration"] |> string |> Int64.Parse
+    let recurrenceData (d: kv) = 
+        // connecting a SharePoint calendar to Outlook, Outlook can not only 
+        // display SharePoint recurrence appointments, but also create those. 
+        // Outlook has its own version of SharePoint's dialogs for different
+        // recurrence types. The only difference between SharePoint and Outlook
+        // created appointments is that Outlook uses ' whereas SharePoint uses
+        // " within RecurrenceData.    
+        (d.["RecurrenceData"] |> string).Replace("'","\"")
 
+    let parseRecurrence(d: Dictionary<string, obj>) =
+        if recurrence d then 
+            if eventType d = 3 then
+                DeletedRecurrenceInstance(masterSeriesItemId d, recurrenceId d)
+            else if eventType d = 4 then
+                ModifiedRecurrenceInstance(masterSeriesItemId d, recurrenceId d)
+            else
                 let endDateTime =
-                    match rd with
+                    match recurrenceData d with
                     | ImplicitEnd _ -> ImplicitEnd
                     | RepeatInstances n -> RepeatInstances n
                     | ExplicitEnd dt -> 
@@ -205,10 +214,10 @@ type Parser() =
                         // ExplicitEnd is 24 hours ahead.
                         if dt.Hour = 0 && dt.Minute = 0 
                         then ExplicitEnd dt
-                        else ExplicitEnd (d.["EndDate"] :?> DateTime)
+                        else ExplicitEnd (endDate d)
                     | _ -> failwith "Unable to parse end"
 
-                match rd with
+                match recurrenceData d with
                 | DailyEveryNthDay n -> Daily(EveryNthDay n, endDateTime)
                 | DailyEveryWeekDay _ -> Daily(EveryWeekDay, endDateTime)
                 | WeeklyEveryNthWeekOnDays (n, days) -> Weekly(EveryNthWeekOnDays(n, days), endDateTime)
@@ -220,10 +229,10 @@ type Parser() =
         else NoRecurrence
 
     let parse (a: Dictionary<string, obj>) =
-        { Id = a.["ID"] :?> Int32
-          Start = a.["EventDate"] :?> DateTime
-          End = a.["EndDate"] :?> DateTime
-          Duration = a.["Duration"] |> string |> Int64.Parse
+        { Id = id a
+          Start = eventDate a
+          End = endDate a
+          Duration = duration a
           Recurrence = parseRecurrence a }
 
     member __.Parse(appointment: Dictionary<string, obj>) =
