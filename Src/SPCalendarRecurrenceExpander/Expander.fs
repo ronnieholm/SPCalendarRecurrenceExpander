@@ -2,6 +2,7 @@
 
 open System
 open System.Collections.Generic
+open Holm.SPCalendarRecurrenceExpander.Parsers
 
 type CalendarRecurrenceExpander(tzBias: int, tzDaylightBias: int) =
     let toLocalTime (dt: obj) =
@@ -10,12 +11,12 @@ type CalendarRecurrenceExpander(tzBias: int, tzDaylightBias: int) =
     let timeZoneCorrect (a: Dictionary<string, obj>) =
         // all day events already have local EventDate and EndDate which is
         // 12:00 AM and 11.59 PM, respectively
-        if (a.["fAllDayEvent"] |> string |> bool.Parse)
+        if allDayEvent a
         then a
         else
             a.["EventDate"] <- toLocalTime (a.["EventDate"])
             a.["EndDate"] <- toLocalTime (a.["EndDate"])
-            if a.["RecurrenceID"] |> string <> "" 
+            if a.["RecurrenceID"] |> string <> ""
             then a.["RecurrenceID"] <- toLocalTime (a.["RecurrenceID"])
             a
 

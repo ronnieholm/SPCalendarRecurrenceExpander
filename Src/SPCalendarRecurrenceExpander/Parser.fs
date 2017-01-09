@@ -8,6 +8,27 @@ open System.Text.RegularExpressions
 type Dow = DayOfWeek
 type kv = Dictionary<string, obj>
 
+module Parsers =
+    let recurrence (d: kv) = d.["fRecurrence"] :?> bool
+    let eventType (d: kv) = d.["EventType"] :?> int
+    let masterSeriesItemId (d: kv) = d.["MasterSeriesItemID"] :?> int
+    let recurrenceId (d: kv) = d.["RecurrenceID"] :?> DateTime
+    let endDate (d: kv) = d.["EndDate"] :?> DateTime
+    let id (d: kv) = d.["ID"] :?> Int32
+    let eventDate (d: kv) = d.["EventDate"] :?> DateTime
+    let duration (d: kv) = d.["Duration"] |> string |> Int64.Parse
+    let allDayEvent (d: kv) = d.["fAllDayEvent"] |> string |> bool.Parse
+    let recurrenceData (d: kv) = 
+        // connecting a SharePoint calendar to Outlook, Outlook can not only 
+        // display SharePoint recurrence appointments, but also create those. 
+        // Outlook has its own version of SharePoint's dialogs for different
+        // recurrence types. The only difference between SharePoint and Outlook
+        // created appointments is that Outlook uses ' whereas SharePoint uses
+        // " within RecurrenceData.    
+        (d.["RecurrenceData"] |> string).Replace("'","\"")
+
+open Parsers
+
 type KindOfDayQualifier =
     | First
     | Second
@@ -177,23 +198,6 @@ type Parser() =
         let m = re.Match(s)
         if m.Success then Some(groupAsDateTime m "windowEnd")
         else None       
-
-    let recurrence (d: kv) = d.["fRecurrence"] :?> bool
-    let eventType (d: kv) = d.["EventType"] :?> int
-    let masterSeriesItemId (d: kv) = d.["MasterSeriesItemID"] :?> int
-    let recurrenceId (d: kv) = d.["RecurrenceID"] :?> DateTime
-    let endDate (d: kv) = d.["EndDate"] :?> DateTime
-    let id (d: kv) = d.["ID"] :?> Int32
-    let eventDate (d: kv) = d.["EventDate"] :?> DateTime
-    let duration (d: kv) = d.["Duration"] |> string |> Int64.Parse
-    let recurrenceData (d: kv) = 
-        // connecting a SharePoint calendar to Outlook, Outlook can not only 
-        // display SharePoint recurrence appointments, but also create those. 
-        // Outlook has its own version of SharePoint's dialogs for different
-        // recurrence types. The only difference between SharePoint and Outlook
-        // created appointments is that Outlook uses ' whereas SharePoint uses
-        // " within RecurrenceData.    
-        (d.["RecurrenceData"] |> string).Replace("'","\"")
 
     let parseRecurrence(d: Dictionary<string, obj>) =
         if recurrence d then 
