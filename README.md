@@ -159,4 +159,5 @@ See also
 --------
 
 [Internet Calendaring and Scheduling Core Object Specification](https://www.ietf.org/rfc/rfc2445.txt)
-[Data elements and interchange formats – Information interchange – Representation of dates and times](https://en.wikipedia.org/wiki/ISO_8601)
+[Data elements and interchange formats â€“ Information interchange â€“ Representation of dates and times](https://en.wikipedia.org/wiki/ISO_8601)
+[Example of fluent interface for generating recurrences](https://github.com/gavynriebau/Dates.Recurring)
